@@ -57,12 +57,12 @@ names(pow_sat_aver2)[3]<-"wef"
 #**** Graphical representation on a map *************
 #We need the following packages
 #Install
-install.packages("sp")
-install.packages("maptools")
-install.packages("maps")
-install.packages("mapdata")
-install.packages("rgdal")
-install.packages("shape")
+# install.packages("sp")
+# install.packages("maptools")
+# install.packages("maps")
+# install.packages("mapdata")
+# install.packages("rgdal")
+# install.packages("shape")
 #Use the packages
 library("sp")
 library("maps")
@@ -85,7 +85,8 @@ colorlegend(zlim=c(0,105),zval=seq(0,105,by=10),
 col=coll[1:100],main="kw/m",
 posx=c(0.2,0.35),posy=c(0.05,0.9))
 #We draw the map in the right part
-map("worldHires",col="grey",fill=TRUE)
+map("worldHires",xlim=c(-10,-1),ylim=c(40,45),col="grey",fill=TRUE)
+#map("worldHires",col="grey",fill=TRUE)
 #We can add a box and axes
 box();axis(1);axis(2)
 #We can add a title and lables for the axes
@@ -96,8 +97,7 @@ rescalecolor<-1+(pow_sat_aver2[,3]*100/105)
 #This puts a color point on its corresponding lon-lat
 points(pow_sat_aver2[,1],pow_sat_aver2[,2] ,col=coll[rescalecolor])
 #We can again overlay the land mask
-map("worldHires",col="grey",
-fill=TRUE,add=TRUE)
+map("worldHires",xlim=c(-10,-1),ylim=c(40,45),col="grey",fill=TRUE,add=TRUE)
 #Save plot
 outputpath<-inputpath
 nameplot<-"TOPEX_wef"
@@ -111,6 +111,11 @@ plotfile<-paste(inputpath,nameplot,".eps",sep="")
 dev.copy (postscript, plotfile,horizontal=F)
 dev.off()
 dev.off()
+#save as PDF
+plotfile2<-paste(outputpath,nameplot,".pdf",sep="")
+dev.copy(pdf,plotfile2)
+dev.off()
+
 #Bay of Biscay
 #If instead of gridpoints we want an interpolated contour surface
 #we have to re-arrange data into a matrix where columns are increasing
@@ -133,3 +138,37 @@ ncol(pow_sat_gp_mean3)
 #[1] 91
 nrow(pow_sat_gp_mean3)
 #[1] 181
+class(pow_sat_gp_mean3)
+rownames(pow_sat_gp_mean3)
+colnames(pow_sat_gp_mean3)
+#In rows we have the lon and in columns the latitude
+#The number of different values of longitude are in columns
+#To plot this matrix as a contour.plot
+zz<-pow_sat_gp_mean3
+xx<-seq(-180,180,by=2)
+yy<-seq(-90,90,by=2)
+#A palette without a explicit number of colors
+coll2<-colorRampPalette(c("purple","blue","lightblue","orange","yellow"))
+#The satellite does not provide a good discrimination between land and sea
+#so we can overlay the land mask with add=TRUE.
+#To that purpose we need a function draw.map to overlay both graphics
+#on the same axes
+#coloured plot+maps
+draw.map <- function() {maps::map("worldHires",xlim=c(-20,0),ylim=c(35,55), 
+                                  fill=TRUE, col="grey", add=TRUE)}
+draw.contour<-function(){contour(xx,yy,zz,nlevels=20,add=TRUE)}
+filled.contour(xx,yy,zz,xlab="ºE", ylab="ºN",xlim=c(-20,0),
+               ylim=c(35,55), color.palette=coll2,
+               plot.axes={axis(1); axis(2) ;draw.contour();draw.map()},
+               main="TOPEX. Wave energy [Kw/m]")
+nameplot<-"TOPEX_wef_2"
+#Save as png
+plotfile<-paste(inputpath,nameplot,".png",sep="")
+dev.copy (png, plotfile)
+dev.off()
+#Save as Encapsulated Postscript
+setEPS()
+plotfile<-paste(inputpath,nameplot,".eps",sep="")
+dev.copy (postscript, plotfile,horizontal=F)
+dev.off()
+dev.off()
