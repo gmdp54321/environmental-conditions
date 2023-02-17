@@ -70,7 +70,7 @@ library("mapdata")
 library("rgdal")
 library("shape")
 #Divide the drawing area into two
-#Left parte:color scale
+#Left part:color scale
 #Right part:map
 layout(matrix(1:2,ncol=2),width=c(1,4),height=c(1,1))
 #Create the palette we are going to use with 100 intermediate colors
@@ -85,7 +85,7 @@ colorlegend(zlim=c(0,105),zval=seq(0,105,by=10),
 col=coll[1:100],main="kw/m",
 posx=c(0.2,0.35),posy=c(0.05,0.9))
 #We draw the map in the right part
-map("worldHires",xlim=c(-10,-1),ylim=c(40,45),col="grey",fill=TRUE)
+map("worldHires",xlim=c(-126,-72),ylim=c(24,52),col="grey",fill=T)
 #map("worldHires",col="grey",fill=TRUE)
 #We can add a box and axes
 box();axis(1);axis(2)
@@ -97,7 +97,7 @@ rescalecolor<-1+(pow_sat_aver2[,3]*100/105)
 #This puts a color point on its corresponding lon-lat
 points(pow_sat_aver2[,1],pow_sat_aver2[,2] ,col=coll[rescalecolor])
 #We can again overlay the land mask
-map("worldHires",xlim=c(-10,-1),ylim=c(40,45),col="grey",fill=TRUE,add=TRUE)
+map("worldHires",xlim=c(-126,-66),ylim=c(24,52),col="grey",fill=TRUE,add=TRUE)
 #Save plot
 outputpath<-inputpath
 nameplot<-"TOPEX_wef"
