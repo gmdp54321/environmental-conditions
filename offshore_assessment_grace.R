@@ -81,23 +81,27 @@ min(pow_sat_aver2[,3],na.rm=TRUE)
 #Max value of the WEF scale=105
 #Min value of the WEF scale=0
 #We draw the color scale in the left part of the image
-colorlegend(zlim=c(0,105),zval=seq(0,105,by=10),
+colorlegend(zlim=c(0,60),zval=seq(0,60,by=10),
 col=coll[1:100],main="kw/m",
 posx=c(0.2,0.35),posy=c(0.05,0.9))
 #We draw the map in the right part
-map("worldHires",xlim=c(-126,-72),ylim=c(24,52),col="grey",fill=T)
+map("worldHires",xlim=c(-100,-66),ylim=c(24,52),col="grey",fill=T)
 #map("worldHires",col="grey",fill=TRUE)
 #We can add a box and axes
-box();axis(1);axis(2)
+box(which="plot")
+axis(1)
+axis(2)
+
 #We can add a title and lables for the axes
-title(main="TOPEX WEF [kW/m] Jan 1993-Oct 2005",
-xlab="ºE",ylab="ºN")
+title(main="TOPEX WEF Jan93-Oct05")
+mtext("ºE",1,srt=45,line=2,cex=1,font=1)
+mtext("ºN",2,srt=45,line=2,cex=1,font=1)
 #This regression relates wef and colors
 rescalecolor<-1+(pow_sat_aver2[,3]*100/105)
 #This puts a color point on its corresponding lon-lat
-points(pow_sat_aver2[,1],pow_sat_aver2[,2] ,col=coll[rescalecolor])
+points(pow_sat_aver2[,1],pow_sat_aver2[,2] ,col=coll[rescalecolor],pch=15,cex=2)
 #We can again overlay the land mask
-map("worldHires",xlim=c(-126,-66),ylim=c(24,52),col="grey",fill=TRUE,add=TRUE)
+map("worldHires",xlim=c(-100,-66),ylim=c(24,52),col="grey",fill=TRUE,add=TRUE)
 #Save plot
 outputpath<-inputpath
 nameplot<-"TOPEX_wef"
