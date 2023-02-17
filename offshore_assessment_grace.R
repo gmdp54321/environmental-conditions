@@ -2,7 +2,7 @@
 # TOPEX
 ##############################################
 # A string object with the name of the folder to read from
-inputpath<-"C:/Users/Docencia/Downloads/01_topex-20230217/"
+inputpath<-"C:/Users/Docencia/Downloads/01_topex-20230217/topex/"
 #We read the first file corresponding to Jan 1993
 #We create a string object with the name of the file we want to read
 inputfile_sat<-paste(inputpath,"topex_19930101_19930201_data.txt",sep="")
@@ -21,16 +21,17 @@ class(tz_sat)
 tz_sat[,1:2]<-sat1[,1:2]
 names(tz_sat)[3]<-"tz"
 #Jan 1993
-#We retrieve the names of the satellite files from the directory: command ???list.files???
+#We retrieve the names of the satellite files from the directory: command ‘list.files’
 files<-list.files(path=inputpath)
 length(files)
+
 #We open a loop to read the rest of the monthly files
 for (knt in seq(2,154,by=1)){
   #the name fo the file to open
   inputfile_satx<-paste(inputpath,files[knt],sep="")
   #We read the files
   satx<-read.table(inputfile_satx,header=TRUE,na.strings="-999.000")
-  #We add a column to hws_sat:hws is in 3rd colum
+  #We add a column to hws_sat:hws is in 3rd column
   hws_sat<-cbind(hws_sat,satx[,3])
   #We calculate the Tz (mean wave period) from sigma0
   #s0 is in 4th column
@@ -64,10 +65,10 @@ install.packages("rgdal")
 install.packages("shape")
 #Use the packages
 library("sp")
-library ("maps")
-library ("mapdata")
-library ("rgdal")
-library ("shape")
+library("maps")
+library("mapdata")
+library("rgdal")
+library("shape")
 #Divide the drawing area into two
 #Left parte:color scale
 #Right part:map
@@ -89,7 +90,7 @@ map("worldHires",col="grey",fill=TRUE)
 box();axis(1);axis(2)
 #We can add a title and lables for the axes
 title(main="TOPEX WEF [kW/m] Jan 1993-Oct 2005",
-xlab="??E",ylab="??N")
+xlab="ºE",ylab="ºN")
 #This regression relates wef and colors
 rescalecolor<-1+(pow_sat_aver2[,3]*100/105)
 #This puts a color point on its corresponding lon-lat
@@ -115,6 +116,7 @@ dev.off()
 #we have to re-arrange data into a matrix where columns are increasing
 #values of the longitude and rows are increasing values of the latitude
 #To that purpose we have a library 'reshape2' and a command 'acast'
+install.packages("reshape2")
 library(reshape2)
 #We create a mirror object
 pow_sat_gp_mean2<-pow_sat_aver2
@@ -124,6 +126,7 @@ names(pow_sat_gp_mean2)[2]<-"y"
 names(pow_sat_gp_mean2)[3]<-"z"
 names(pow_sat_gp_mean2)
 #[1] "x" "y" "z"
+#FIXME
 #We apply the command 'acast' and store results in pow_sta_gp_mean3
 pow_sat_gp_mean3<-acast(pow_sat_gp_mean2, x~y, value.var="z")
 ncol(pow_sat_gp_mean3)
